@@ -181,6 +181,24 @@ hr {
     color: #4b4b4b !important;
   }
 }
+
+@media (max-width: 500px) {
+  .posts-item h2 {
+    font-size: 30px;
+  }
+  .post-summary {
+    font-size: 28px;
+  }
+  .page-heading h1 {
+    font-size: 50px;
+    text-align: center;
+  }
+  .page-heading span {
+    font-size: 24px;
+    text-align: center;
+  }
+}
+
 .bg_index {
   background-image: url("./assets/img/bg-index.jpg");
 }
