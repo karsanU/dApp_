@@ -32,7 +32,7 @@ function App() {
 return (
   <>
     <CssBaseline />
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Box component="h1">Game Lobby</Box>
       <Grid
         container
