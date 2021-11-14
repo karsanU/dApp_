@@ -23,26 +23,27 @@ function App() {
     for (const [id, player] of players) {
 
       result.push(<Grid item xs={10} sm={5} >
-        <Panel key={id} player={{ ...player }} colors={colors} setColors={setColors} setPlayers={setPlayers} players={players} />
-      </Grid>)
-    }
-    return result;
+        <Panel sx={{ display: 'flex', justifyContent: 'center'  }} key={id} player={{ ...player }} colors={colors} setColors={setColors} setPlayers={setPlayers} players={players} />
+      </Grid >)
   }
+  return result;
+}
 
-  return (
-    <>
-      <Container maxWidth="lg">
-        <Box component="h1">Game Lobby</Box>
-        <Grid
-          container
-          rowSpacing={5} columnSpacing={{ xs: 5 }}
-          justifyContent="center"
-        >
-          {renderPlayers()}
-        </Grid>
-      </Container>
-    </>
-  );
+return (
+  <>
+    <CssBaseline />
+    <Container maxWidth="lg">
+      <Box component="h1">Game Lobby</Box>
+      <Grid
+        container
+        rowSpacing={5} columnSpacing={{ xs: 5 }}
+        justifyContent="center"
+      >
+        {renderPlayers()}
+      </Grid>
+    </Container>
+  </>
+);
 }
 
 export default App;

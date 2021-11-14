@@ -6,18 +6,20 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 function panel({ player, colors, setColors, players, setPlayers }) {
+    // onClick logic for when you select a color 
     const pickColorHandler = (color) => {
         setPlayers(new Map(players.set(player.id, { ...player, color })))
         setColors([...colors.filter(_color => !(_color === color))])
     }
     // render the individual color selectors 
-    const renderColorPicker = (color) => {
+    const renderColorPickerCircle = (color) => {
         return <Box
             key={player.id + color}
             onClick={() => pickColorHandler(color)}
             component="button"
             sx={{
                 padding: 2,
+                marginRight: 1,
                 bgcolor: color,
                 borderRadius: '50%',
                 border: 'none',
@@ -28,8 +30,10 @@ function panel({ player, colors, setColors, players, setPlayers }) {
             }}>
         </Box>
     }
+
+
     return (
-        <Card sx={{ maxWidth: 400 }}>
+        <Card sx={{ maxWidth: 400, margin: 'auto' }}>
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div" sx={{ margin: 0 }}>
                     {player.name}
@@ -41,8 +45,9 @@ function panel({ player, colors, setColors, players, setPlayers }) {
 
             <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 {player.color ? <span> Your color is: </span> : <span> Choose your color: </span>}
-                <Box>{player.color ? renderColorPicker(player.color, true) : colors.map((color) => {
-                    return renderColorPicker(color)
+                {/* render each color options  */}
+                <Box>{player.color ? renderColorPickerCircle(player.color, true) : colors.map((color) => {
+                    return renderColorPickerCircle(color)
                 })} </Box>
             </CardActions>
         </Card >
