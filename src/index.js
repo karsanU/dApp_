@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import ParticlesBg from 'particles-bg'
+import SingUp from './views/singUp';
+import ParticlesBg from 'particles-bg';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
-    <ParticlesBg type="thick" bg={true} />
+    <SingUp />
+    <ParticlesBg type='thick' bg={true} />
   </React.StrictMode>,
   document.getElementById('root')
 );
