@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Panel from './components/Panel';
-import { db } from './firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import Panel from '../components/Panel';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { UserContext } from '../contexts';
+
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const defaultPlayers = new Map();
@@ -16,25 +25,56 @@ function App() {
       color: undefined,
     });
   }
+  const [players, setPlayers] = useState(new Map(defaultPlayers));
+  const { user, setUser } = useContext(UserContext);
+
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate('/signin');
+    }
+  });
+  useEffect(() => {
+    if (user) {
+      (async function () {
+        const functions = getFunctions();
+        const randomNumber = httpsCallable(functions, 'randomNumber');
+        randomNumber({ text: 'yolo' }).then((result) => {
+          // Read result of the Cloud Function.
+          /** @type {any} */
+          const data = result.data;
+          console.log(data);
+        });
+
+        // const docRef = doc(db, 'users', user.uid);
+        // const docSnap = await getDoc(docRef);
+        // if (docSnap.exists()) {
+        //   console.log('Document data:', docSnap.data());
+        // } else {
+        //   // doc.data() will be undefined in this case
+        //   console.log('No such document!');
+        // }
+      })();
+    }
+  }, [user]);
+
   const [colors, setColors] = useState([
     '#DFFF00',
     '#FFBF00',
     '#FF7F50',
     '#DE3163',
   ]);
-  const [players, setPlayers] = useState(new Map(defaultPlayers));
 
-  useEffect(() => {
-    // Update the document title using the browser API
+  function handleLogOut() {
     (async function () {
-      const docRef = collection(db, 'users');
-      const collectionSnap = await getDocs(docRef);
-      collectionSnap.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, ' => ', doc.data());
-      });
+      try {
+        await signOut(auth);
+      } catch (err) {
+        console.log(err);
+      }
+      setUser(null);
     })();
-  }, []);
+  }
 
   function renderPlayers() {
     const result = [];
@@ -59,9 +99,25 @@ function App() {
   return (
     <>
       <CssBaseline />
+      <AppBar style={{ background: 'rgba(0, 0, 0, 0.87)' }}>
+        <Toolbar color='white'>
+          <IconButton
+            size='large'
+            edge='start'
+            color='inherit'
+            aria-label='menu'
+            sx={{ mr: 2 }}></IconButton>
+          <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+            Game Lobby
+          </Typography>
+          <Button color='inherit' onClick={() => handleLogOut()}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
       <Container maxWidth='md'>
-        <Box component='h1'>Game Lobby</Box>
         <Grid
+          sx={{ mt: 8 }}
           container
           rowSpacing={5}
           columnSpacing={{ xs: 5 }}

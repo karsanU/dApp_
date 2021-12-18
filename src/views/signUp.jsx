@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
-import { getTableSortLabelUtilityClass } from '@mui/material';
+import { UserContext } from '../contexts';
 
-function SignUp() {
+function SignUp({ setWantsToSignIn }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [singUpErr, setSingUpErr] = useState('');
+  const [signUpErr, setSingUpErr] = useState('');
+  const { user, setUser } = useContext(UserContext);
+
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      userIsLoggedIn();
+    }
+  });
 
   function handleOnChange(e, set) {
     set(e.target.value);
+  }
+
+  function userIsLoggedIn() {
+    navigate('/home');
   }
 
   function handleSingUp() {
@@ -26,8 +38,8 @@ function SignUp() {
           email,
           password
         );
-        const user = userCredential.user;
-        console.log(user);
+        setUser(userCredential.user);
+        userIsLoggedIn();
       } catch (err) {
         setSingUpErr(err.toString());
       }
@@ -82,11 +94,11 @@ function SignUp() {
             handleOnChange(e, setPassword);
           }}
         />
-        {singUpErr && (
+        {signUpErr && (
           <Box
             sx={{ m: 0, mx: 'auto', mb: 2, width: 250, color: 'red' }}
             component='p'>
-            {singUpErr}
+            {signUpErr}
           </Box>
         )}
         <Button
@@ -95,9 +107,11 @@ function SignUp() {
           onClick={() => handleSingUp()}>
           Sign up
         </Button>
-        <Link sx={{ mx: 'auto', my: 2 }} href='#' underline='hover'>
-          {'Sing in'}
-        </Link>
+        <Box sx={{ mx: 'auto', my: 2 }}>
+          <RouterLink style={{ color: '#1976d2' }} to='/signin'>
+            {'Sign in'}
+          </RouterLink>
+        </Box>
       </Box>
     </Container>
   );
