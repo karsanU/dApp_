@@ -43,7 +43,7 @@ function App() {
       setPlayers(res.data.players);
       setColors(res.data.colors);
     })();
-  }, []);
+  }, [user]);
 
   function handleLogOut() {
     (async function () {

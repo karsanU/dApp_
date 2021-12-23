@@ -30,7 +30,7 @@ function Panel({ player, colors, setColors, players, setPlayers }) {
         }
       })();
     }
-  }, []);
+  }, [player.id, user]);
 
   // change color
   const pickColorHandler = (color, removePick) => {
@@ -94,7 +94,7 @@ function Panel({ player, colors, setColors, players, setPlayers }) {
               right: 34,
               top: 10,
               color: 'white',
-              fontSize: 20,
+              fontSize: 17,
               '&:hover': {
                 opacity: [0.5],
                 cursor: 'pointer',
